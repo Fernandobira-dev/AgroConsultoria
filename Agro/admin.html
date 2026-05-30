@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - AgroConsultoria</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1f3a0f, #2d5016);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #7cb342, #558b2f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 25px rgba(124, 179, 66, 0.4);
+        }
+
+        .login-header h1 {
+            color: #2d5016;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2d5016;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7cb342;
+            font-size: 1.2rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #7cb342;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #7cb342, #558b2f);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 179, 66, 0.4);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            border-left: 4px solid #c62828;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+        .dashboard.active {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #2d5016, #3d6b1f);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #7cb342;
+            border-left-color: #7cb342;
+        }
+
+        .menu-item.active {
+            background: #e8f5e9;
+            color: #2d5016;
+            border-left-color: #7cb342;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            width: calc(100% - 280px);
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .top-bar h1 {
+            color: #2d5016;
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #7cb342, #558b2f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            padding: 0.7rem 1.5rem;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.green { background: #e8f5e9; color: #2d5016; }
+        .stat-icon.blue { background: #e3f2fd; color: #1976d2; }
+        .stat-icon.orange { background: #fff3e0; color: #f57c00; }
+        .stat-icon.purple { background: #f3e5f5; color: #7b1fa2; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d5016;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Content Section */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-header h2 {
+            color: #2d5016;
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7cb342, #558b2f);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table thead {
+            background: #f8f9fa;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2d5016;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.pending { background: #fff3e0; color: #f57c00; }
+        .status-badge.approved { background: #e8f5e9; color: #2d5016; }
+        .status-badge.rejected { background: #ffebee; color: #c62828; }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon.view { background: #e3f2fd; color: #1976d2; }
+        .btn-icon.edit { background: #fff3e0; color: #f57c00; }
+        .btn-icon.delete { background: #ffebee; color: #c62828; }
+
+        .btn-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-header h3 {
+            color: #2d5016;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #e0e0e0;
+            transform: rotate(90deg);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-grid .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Search & Filter */
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .filter-select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        /* Charts placeholder */
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo"></div>
+                <h1>Painel Administrativo</h1>
+                <p>AgroConsultoria</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                 Usuário ou senha incorretos!
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"></span>
+                        <input type="text" id="username" placeholder="Digite seu usuário" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"></span>
+                        <input type="password" id="password" placeholder="Digite sua senha" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                     Entrar no Sistema
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"></div>
+                <h2>AgroConsultoria</h2>
+                <p>Painel Administrativo</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-section="overview">
+                    <span class="menu-icon"></span>
+                    <span>Visão Geral</span>
+                </div>
+                <div class="menu-item" data-section="consultas">
+                    <span class="menu-icon"></span>
+                    <span>Consultas</span>
+                </div>
+                <div class="menu-item" data-section="clientes">
+                    <span class="menu-icon"></span>
+                    <span>Clientes</span>
+                </div>
+                <div class="menu-item" data-section="servicos">
+                    <span class="menu-icon"></span>
+                    <span>Serviços</span>
+                </div>
+                <div class="menu-item" data-section="financeiro">
+                    <span class="menu-icon"></span>
+                    <span>Financeiro</span>
+                </div>
+                <div class="menu-item" data-section="equipe">
+                    <span class="menu-icon"></span>
+                    <span>Equipe</span>
+                </div>
+                <div class="menu-item" data-section="relatorios">
+                    <span class="menu-icon"></span>
+                    <span>Relatórios</span>
+                </div>
+                <div class="menu-item" data-section="configuracoes">
+                    <span class="menu-icon"></span>
+                    <span>Configurações</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <h1 id="pageTitle">Visão Geral</h1>
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <span><strong>Admin</strong></span>
+                    <button class="logout-btn" id="logoutBtn"> Sair</button>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="content-section active" id="overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">47</div>
+                                <div class="stat-label">Consultas Pendentes</div>
+                            </div>
+                            <div class="stat-icon orange"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">156</div>
+                                <div class="stat-label">Clientes Ativos</div>
+                            </div>
+                            <div class="stat-icon green"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">2.4M Kz</div>
+                                <div class="stat-label">Receita Mensal</div>
+                            </div>
+                            <div class="stat-icon blue"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">9</div>
+                                <div class="stat-label">Membros da Equipe</div>
+                            </div>
+                            <div class="stat-icon purple"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Estatísticas do Mês</h2>
+                    </div>
+                    <div class="chart-container">
+                         Gráfico de Desempenho (Em desenvolvimento)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Atividades Recentes</h2>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Atividade</th>
+                                <th>Cliente</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11/11/2025</td>
+                                <td>Nova Consulta Agendada</td>
+                                <td>João Silva</td>
+                                <td><span class="status-badge pending">Pendente</span></td>
+                            </tr>
+                            <tr>
+                                <td>10/11/2025</td>
+                                <td>Pagamento Recebido</td>
+                                <td>Maria Santos</td>
+                                <td><span class="status-badge approved">Aprovado</span></td>
+                            </tr>
+                            <tr>
+                                <td>09/11/2025</td>
+                                <td>Relatório Enviado</td>
+                                <td>Pedro Costa</td>
+                                <td><span class="status-badge approved">Concluído</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Consultas Section -->
+            <div class="content-section" id="consultas">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Gestão de Consultas</h2>
+                        <button class="btn btn-primary" onclick="openModal('consultaModal')">
+                             Nova Consulta
+                        </button>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <span class="search-icon"></span>
+                            <input type="text" placeholder="Buscar consultas...">
+                        </div>
+                        <select class="filter-select">
+                            <option>Todos os Status</option>
+                            <option>Pendentes</option>
+                            <option>Confirmadas</option>
+                            <option>Concluídas</option>
+                            <option>Canceladas</option>
+                        </select>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Serviço</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consultasTable">
+                            <tr>
+                                <td>#001</td>
+                                <td>João Silva</td>
+                                <td>15/11/2025</td>
+                                <td>Auditoria Financeira</td>
+                                <td><span class="status-badge pending">Pendente</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon view"></button>
+                                        <button class="btn-icon edit"></button>
+                                        <button class="btn-icon delete"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Clientes Section -->
+            <div class="content-section" id="clientes">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Gestão de Clientes</h2>
+                        <button class="btn btn-primary" onclick="openModal('clienteModal')">
+                             Novo Cliente
+                        </button>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <span class="search-icon"></span>
+                            <input type="text" placeholder="Buscar clientes...">
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#C001</td>
+                                <td>João Silva</td>
+                                <td>joao@email.com</td>
+                                <td>+244 923 456 789</td>
+                                <td>Pequena Propriedade</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon view"></button>
+                                        <button class="btn-icon edit"></button>
+                                        <button class="btn-icon delete"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Serviços Section -->
+            <div class="content-section" id="servicos">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Gestão de Serviços</h2>
+                        <button class="btn btn-primary" onclick="openModal('servicoModal')">
+                             Novo Serviço
+                        </button>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Formato</th>
+                                <th>Preço/Sessão</th>
+                                <th>Pacote Mensal</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Auditoria Financeira</td>
+                                <td>Presencial</td>
+                                <td>20.000 Kz</td>
+                                <td>80.000 Kz</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon edit"></button>
+                                        <button class="btn-icon delete"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Consultoria Agronómica</td>
+                                <td>Online</td>
+                                <td>15.000 Kz</td>
+                                <td>60.000 Kz</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon edit"></button>
+                                        <button class="btn-icon delete"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Financeiro Section -->
+            <div class="content-section" id="financeiro">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">2.4M Kz</div>
+                                <div class="stat-label">Receita Mensal</div>
+                            </div>
+                            <div class="stat-icon green"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">450K Kz</div>
+                                <div class="stat-label">Pendente</div>
+                            </div>
+                            <div class="stat-icon orange"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">1.9M Kz</div>
+                                <div class="stat-label">Recebido</div>
+                            </div>
+                            <div class="stat-icon blue"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Transações Recentes</h2>
+                        <button class="btn btn-primary" onclick="openModal('transacaoModal')">
+                             Nova Transação
+                        </button>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Serviço</th>
+                                <th>Valor</th>
+                                <th>Método</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10/11/2025</td>
+                                <td>Maria Santos</td>
+                                <td>Plano Padrão</td>
+                                <td>250.000 Kz</td>
+                                <td>Transferência</td>
+                                <td><span class="status-badge approved">Recebido</span></td>
+                            </tr>
+                            <tr>
+                                <td>09/11/2025</td>
+                                <td>Pedro Costa</td>
+                                <td>Consultoria</td>
+                                <td>20.000 Kz</td>
+                                <td>Cash</td>
+                                <td><span class="status-badge approved">Recebido</span></td>
+                            </tr>
+                            <tr>
+                                <td>08/11/2025</td>
+                                <td>Ana Silva</td>
+                                <td>Plano Premium</td>
+                                <td>400.000 Kz</td>
+                                <td>TPA</td>
+                                <td><span class="status-badge pending">Pendente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Equipe Section -->
+            <div class="content-section" id="equipe">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Gestão da Equipe</h2>
+                        <button class="btn btn-primary" onclick="openModal('membroModal')">
+                             Novo Membro
+                        </button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-value">9</div>
+                                    <div class="stat-label">Membros Ativos</div>
+                                </div>
+                                <div class="stat-icon green"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-value">45</div>
+                                    <div class="stat-label">Consultas Realizadas</div>
+                                </div>
+                                <div class="stat-icon blue"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Adriano Manuel</td>
+                                <td>CEO</td>
+                                <td>adriano@agro.ao</td>
+                                <td>+244 923 111 111</td>
+                                <td><span class="status-badge approved">Ativo</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon view"></button>
+                                        <button class="btn-icon edit"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Filomena da Silva</td>
+                                <td>CO-CEO</td>
+                                <td>filomena@agro.ao</td>
+                                <td>+244 923 222 222</td>
+                                <td><span class="status-badge approved">Ativo</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon view"></button>
+                                        <button class="btn-icon edit"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Relatórios Section -->
+            <div class="content-section" id="relatorios">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Relatórios e Análises</h2>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Relatório de Consultas</h3>
+                            <button class="btn btn-primary" style="width: 100%;">
+                                 Gerar Relatório
+                            </button>
+                        </div>
+                        <div class="stat-card">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Relatório Financeiro</h3>
+                            <button class="btn btn-primary" style="width: 100%;">
+                                Gerar Relatório
+                            </button>
+                        </div>
+                        <div class="stat-card">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Relatório de Clientes</h3>
+                            <button class="btn btn-primary" style="width: 100%;">
+                                 Gerar Relatório
+                            </button>
+                        </div>
+                        <div class="stat-card">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Relatório de Desempenho</h3>
+                            <button class="btn btn-primary" style="width: 100%;">
+                                 Gerar Relatório
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                         Gráficos de Análise (Em desenvolvimento)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configurações Section -->
+            <div class="content-section" id="configuracoes">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Configurações do Sistema</h2>
+                    </div>
+
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 12px;">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Informações da Empresa</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nome da Empresa</label>
+                                    <input type="text" value="AgroConsultoria" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" value="contacto@agroconsultoria.ao" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <input type="tel" value="+244 928 288 287" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Localização</label>
+                                    <input type="text" value="Luanda, Angola" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 1rem;"> Salvar Alterações</button>
+                        </div>
+
+                        <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 12px;">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Segurança</h3>
+                            <div class="form-group">
+                                <label>Alterar Senha</label>
+                                <input type="password" placeholder="Nova senha" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 0.5rem;">
+                                <input type="password" placeholder="Confirmar senha" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 1rem;"> Alterar Senha</button>
+                        </div>
+
+                        <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 12px;">
+                            <h3 style="color: #2d5016; margin-bottom: 1rem;"> Notificações</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" checked style="width: 20px; height: 20px;">
+                                    <span>Email para novas consultas</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" checked style="width: 20px; height: 20px;">
+                                    <span>Email para pagamentos recebidos</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" style="width: 20px; height: 20px;">
+                                    <span>Relatórios semanais</span>
+                                </label>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 1rem;"> Salvar Preferências</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="consultaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Nova Consulta</h3>
+                <button class="close-modal" onclick="closeModal('consultaModal')">✕</button>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Selecione...</option>
+                            <option>João Silva</option>
+                            <option>Maria Santos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data</label>
+                        <input type="date" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Serviço</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Selecione...</option>
+                            <option>Auditoria Financeira</option>
+                            <option>Consultoria Agronómica</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Observações</label>
+                        <textarea rows="4" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;"></textarea>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('consultaModal')" style="flex: 1;">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="clienteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Novo Cliente</h3>
+                <button class="close-modal" onclick="closeModal('clienteModal')">✕</button>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome Completo</label>
+                        <input type="text" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Tipo de Propriedade</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Pequena Propriedade</option>
+                            <option>Média Propriedade</option>
+                            <option>Grande Propriedade</option>
+                            <option>Empresa Rural</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('clienteModal')" style="flex: 1;">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="servicoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Novo Serviço</h3>
+                <button class="close-modal" onclick="closeModal('servicoModal')">✕</button>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome do Serviço</label>
+                        <input type="text" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Formato</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Presencial</option>
+                            <option>Online</option>
+                            <option>Híbrido</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço/Sessão (Kz)</label>
+                        <input type="number" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Pacote Mensal (Kz)</label>
+                        <input type="number" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('servicoModal')" style="flex: 1;">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="transacaoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Nova Transação</h3>
+                <button class="close-modal" onclick="closeModal('transacaoModal')">✕</button>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Selecione...</option>
+                            <option>João Silva</option>
+                            <option>Maria Santos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor (Kz)</label>
+                        <input type="number" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Método de Pagamento</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Cash</option>
+                            <option>Transferência</option>
+                            <option>TPA</option>
+                            <option>Cheque</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option>Pendente</option>
+                            <option>Recebido</option>
+                            <option>Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('transacaoModal')" style="flex: 1;">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="membroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3> Novo Membro</h3>
+                <button class="close-modal" onclick="closeModal('membroModal')">✕</button>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome Completo</label>
+                        <input type="text" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo</label>
+                        <input type="text" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Telefone</label>
+                        <input type="tel" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('membroModal')" style="flex: 1;">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Credenciais: Adimin / 12345
+            if (username === 'Adimin' && password === '12345') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                
+                // Salvar sessão
+                sessionStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // Check if already logged in
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        });
+
+        // Menu navigation
+        const menuItems = document.querySelectorAll('.menu-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        const pageTitle = document.getElementById('pageTitle');
+
+        const sectionTitles = {
+            'overview': 'Visão Geral',
+            'consultas': 'Gestão de Consultas',
+            'clientes': 'Gestão de Clientes',
+            'servicos': 'Gestão de Serviços',
+            'financeiro': 'Gestão Financeira',
+            'equipe': 'Gestão da Equipe',
+            'relatorios': 'Relatórios e Análises',
+            'configuracoes': 'Configurações do Sistema'
+        };
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                
+                // Update active menu item
+                menuItems.forEach(mi => mi.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active content section
+                contentSections.forEach(cs => cs.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                
+                // Update page title
+                pageTitle.textContent = sectionTitles[section];
+            });
+        });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Prevent form submission for demo
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert(' Dados salvos com sucesso! (Demonstração)');
+                const modalParent = this.closest('.modal');
+                if (modalParent) {
+                    modalParent.classList.remove('active');
+                }
+            });
+        });
+
+        // Make functions global
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(stat => {
+                if (!stat.textContent.includes('Kz')) {
+                    const currentValue = parseInt(stat.textContent);
+                    if (Math.random() > 0.7) {
+                        stat.textContent = currentValue + Math.floor(Math.random() * 3);
+                    }
+                }
+            });
+        }, 10000);
+    </script>
+</body>
+</html>
